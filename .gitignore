@@ -216,3 +216,16 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Flutter / Dart
+mobile/.dart_tool/
+mobile/.flutter-plugin-dependencies
+mobile/build/
+mobile/.pub-cache/
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/ios/Pods/
+
+# Environment
+.env
+backend/.env
