@@ -1,0 +1,17 @@
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    """Central app configuration, loaded from environment variables (.env)."""
+
+    database_url: str
+    jwt_secret_key: str
+    jwt_algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+    refresh_token_expire_days: int = 30
+    environment: str = "development"
+
+    model_config = SettingsConfigDict(env_file=".env", case_sensitive=False)
+
+
+settings = Settings()
