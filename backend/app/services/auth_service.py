@@ -8,14 +8,27 @@ from app.core.security import (
     hash_password,
     verify_password,
 )
+from app.repositories.category_repository import CategoryRepository
+from app.repositories.payment_method_repository import PaymentMethodRepository
 from app.repositories.user_repository import UserRepository
 from app.schemas.auth import TokenResponse
+from app.services.category_service import CategoryService
+from app.services.payment_method_service import PaymentMethodService
 from app.models.user import User
 
 
 class AuthService:
-    def __init__(self, user_repository: UserRepository):
+    def __init__(
+        self,
+        user_repository: UserRepository,
+        category_repository: CategoryRepository | None = None,
+        payment_method_repository: PaymentMethodRepository | None = None,
+    ):
         self.user_repository = user_repository
+        self.category_service = CategoryService(category_repository) if category_repository else None
+        self.payment_method_service = (
+            PaymentMethodService(payment_method_repository) if payment_method_repository else None
+        )
 
     async def register(self, name: str, email: str, password: str) -> TokenResponse:
         existing_user = await self.user_repository.get_by_email(email)
@@ -29,6 +42,12 @@ class AuthService:
 
         hashed = hash_password(password)
         user = await self.user_repository.create(name=name, email=email, hashed_password=hashed)
+
+        assert self.category_service and self.payment_method_service, (
+            "AuthService.register() requires category_repository and payment_method_repository."
+        )
+        await self.category_service.seed_defaults(user.id)
+        await self.payment_method_service.seed_defaults(user.id)
 
         return TokenResponse(
             access_token=create_access_token(subject=str(user.id)),
