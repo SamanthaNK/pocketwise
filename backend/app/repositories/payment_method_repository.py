@@ -40,5 +40,9 @@ class PaymentMethodRepository:
         await self.db.commit()
 
     async def has_transactions(self, payment_method_id: int) -> bool:
-        """ STUB: always False until the Transaction model exists."""
-        return False
+        from app.models.transaction import Transaction
+        from sqlalchemy import exists
+
+        stmt = select(exists().where(Transaction.payment_method_id == payment_method_id))
+        result = await self.db.execute(stmt)
+        return bool(result.scalar())

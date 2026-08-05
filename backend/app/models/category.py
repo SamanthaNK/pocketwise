@@ -33,7 +33,7 @@ class Category(Base):
     type: Mapped[CategoryType] = mapped_column(SAEnum(CategoryType, name="category_type"), nullable=False)
     icon: Mapped[str] = mapped_column(String(50), nullable=False, default="category")
 
-    budget_group: Mapped[BudgetGroup | None] = mapped_column(SAEnum(BudgetGroup, name="budget_group"), nullable=True)
+    budget_group: Mapped[BudgetGroup | None] = mapped_column(SAEnum(BudgetGroup, name="budget_group", create_type=False), nullable=True)
 
     is_default: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     is_archived: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)

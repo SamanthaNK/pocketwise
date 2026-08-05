@@ -47,7 +47,9 @@ class CategoryRepository:
         await self.db.commit()
 
     async def has_transactions(self, category_id: int) -> bool:
-        """
-        STUB: always False until the Transaction model exists.
-        """
-        return False
+        from app.models.transaction import Transaction
+        from sqlalchemy import exists
+
+        stmt = select(exists().where(Transaction.category_id == category_id))
+        result = await self.db.execute(stmt)
+        return bool(result.scalar())
