@@ -23,26 +23,15 @@ class PaymentMethodRepository:
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
 
-    async def create(self, payment_method: PaymentMethod) -> PaymentMethod:
-        self.db.add(payment_method)
-        await self.db.commit()
-        await self.db.refresh(payment_method)
-        return payment_method
+    async def get_by_client_generated_id(self, client_generated_id, user_id: int) -> PaymentMethod | None:
+        stmt = select(PaymentMethod).where(
+            PaymentMethod.client_generated_id == client_generated_id, PaymentMethod.user_id == user_id
+        )
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
 
     async def save(self, payment_method: PaymentMethod) -> PaymentMethod:
         self.db.add(payment_method)
         await self.db.commit()
         await self.db.refresh(payment_method)
         return payment_method
-
-    async def delete(self, payment_method: PaymentMethod) -> None:
-        await self.db.delete(payment_method)
-        await self.db.commit()
-
-    async def has_transactions(self, payment_method_id: int) -> bool:
-        from app.models.transaction import Transaction
-        from sqlalchemy import exists
-
-        stmt = select(exists().where(Transaction.payment_method_id == payment_method_id))
-        result = await self.db.execute(stmt)
-        return bool(result.scalar())

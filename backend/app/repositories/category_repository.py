@@ -25,6 +25,13 @@ class CategoryRepository:
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
 
+    async def get_by_client_generated_id(self, client_generated_id, user_id: int) -> Category | None:
+        stmt = select(Category).where(
+            Category.client_generated_id == client_generated_id, Category.user_id == user_id
+        )
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
+
     async def get_by_name(self, user_id: int, name: str) -> Category | None:
         stmt = select(Category).where(Category.user_id == user_id, Category.name == name)
         result = await self.db.execute(stmt)
@@ -45,11 +52,3 @@ class CategoryRepository:
     async def delete(self, category: Category) -> None:
         await self.db.delete(category)
         await self.db.commit()
-
-    async def has_transactions(self, category_id: int) -> bool:
-        from app.models.transaction import Transaction
-        from sqlalchemy import exists
-
-        stmt = select(exists().where(Transaction.category_id == category_id))
-        result = await self.db.execute(stmt)
-        return bool(result.scalar())

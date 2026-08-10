@@ -5,11 +5,7 @@ from app.api.deps import get_current_user
 from app.controllers import payment_method_controller
 from app.core.database import get_db
 from app.models.user import User
-from app.schemas.payment_method import (
-    PaymentMethodCreateRequest,
-    PaymentMethodResponse,
-    PaymentMethodUpdateRequest,
-)
+from app.schemas.payment_method import PaymentMethodResponse, PaymentMethodUpdateRequest
 
 router = APIRouter(prefix="/payment-methods", tags=["Payment Methods"])
 
@@ -21,15 +17,6 @@ async def list_payment_methods(
     current_user: User = Depends(get_current_user),
 ):
     return await payment_method_controller.list_payment_methods(current_user, include_archived, db)
-
-
-@router.post("", response_model=PaymentMethodResponse, status_code=201)
-async def create_payment_method(
-    payload: PaymentMethodCreateRequest,
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    return await payment_method_controller.create_payment_method(current_user, payload, db)
 
 
 @router.put("/{payment_method_id}", response_model=PaymentMethodResponse)
@@ -58,12 +45,3 @@ async def unarchive_payment_method(
     current_user: User = Depends(get_current_user),
 ):
     return await payment_method_controller.unarchive_payment_method(current_user, payment_method_id, db)
-
-
-@router.delete("/{payment_method_id}", status_code=204)
-async def delete_payment_method(
-    payment_method_id: int,
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    await payment_method_controller.delete_payment_method(current_user, payment_method_id, db)

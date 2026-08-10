@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.repositories.category_repository import CategoryRepository
 from app.repositories.payment_method_repository import PaymentMethodRepository
+from app.repositories.transaction_repository import TransactionRepository
 from app.repositories.user_repository import UserRepository
 from app.schemas.auth import LoginRequest, RefreshRequest, RegisterRequest, TokenResponse
 from app.services.auth_service import AuthService
@@ -14,6 +15,7 @@ async def register_user(payload: RegisterRequest, db: AsyncSession) -> TokenResp
         UserRepository(db),
         CategoryRepository(db),
         PaymentMethodRepository(db),
+        TransactionRepository(db),
     )
     return await service.register(name=payload.name, email=payload.email, password=payload.password)
 

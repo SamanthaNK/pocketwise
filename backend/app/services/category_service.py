@@ -1,6 +1,7 @@
 from app.core.exceptions import AppException
 from app.models.category import BudgetGroup, Category, CategoryType
 from app.repositories.category_repository import CategoryRepository
+from app.repositories.transaction_repository import TransactionRepository
 from app.schemas.category import CategoryCreateRequest, CategoryUpdateRequest
 
 DEFAULT_CATEGORIES: list[dict] = [
@@ -23,11 +24,11 @@ DEFAULT_CATEGORIES: list[dict] = [
 
 
 class CategoryService:
-    def __init__(self, category_repository: CategoryRepository):
+    def __init__(self, category_repository: CategoryRepository, transaction_repository: TransactionRepository):
         self.category_repository = category_repository
+        self.transaction_repository = transaction_repository
 
     async def seed_defaults(self, user_id: int) -> None:
-        """Gives a brand-new user their starter category set. Called once, right after registration."""
         for defaults in DEFAULT_CATEGORIES:
             category = Category(
                 user_id=user_id,
@@ -114,7 +115,7 @@ class CategoryService:
             )
 
     async def _block_if_has_transactions(self, category_id: int) -> None:
-        if await self.category_repository.has_transactions(category_id):
+        if await self.transaction_repository.has_transactions_for_category(category_id):
             raise AppException(
                 status_code=409,
                 error_code="CATEGORY_HAS_TRANSACTIONS",
