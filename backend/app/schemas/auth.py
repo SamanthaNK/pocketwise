@@ -26,7 +26,7 @@ class UserResponse(BaseModel):
     id: int
     name: str
     email: EmailStr
-
+    privacy_mode_enabled: bool
     model_config = {"from_attributes": True}
 
 class ChangePasswordRequest(BaseModel):

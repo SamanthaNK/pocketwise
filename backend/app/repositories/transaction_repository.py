@@ -1,3 +1,4 @@
+import uuid
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
@@ -74,6 +75,15 @@ class TransactionRepository:
 
     async def get_by_id(self, transaction_id: int, user_id: int) -> Transaction | None:
         stmt = select(Transaction).where(Transaction.id == transaction_id, Transaction.user_id == user_id)
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def get_by_client_generated_id(
+        self, client_generated_id: uuid.UUID, user_id: int
+    ) -> Transaction | None:
+        stmt = select(Transaction).where(
+            Transaction.client_generated_id == client_generated_id, Transaction.user_id == user_id
+        )
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
 

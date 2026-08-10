@@ -1,0 +1,10 @@
+from app.models.user import User
+from app.repositories.user_repository import UserRepository
+
+
+class UserService:
+    def __init__(self, user_repository: UserRepository):
+        self.user_repository = user_repository
+
+    async def set_privacy_mode(self, user: User, enabled: bool) -> User:
+        return await self.user_repository.update_privacy_mode(user, enabled)

@@ -28,3 +28,10 @@ class UserRepository:
         await self.db.commit()
         await self.db.refresh(user)
         return user
+
+    async def update_privacy_mode(self, user: User, enabled: bool) -> User:
+        user.privacy_mode_enabled = enabled
+        self.db.add(user)
+        await self.db.commit()
+        await self.db.refresh(user)
+        return user
