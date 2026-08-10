@@ -1,3 +1,4 @@
+import uuid
 from decimal import Decimal
 
 from sqlalchemy import func, select
@@ -12,6 +13,11 @@ class DebtRepository:
 
     async def get_by_id(self, debt_id: int, user_id: int) -> Debt | None:
         stmt = select(Debt).where(Debt.id == debt_id, Debt.user_id == user_id)
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def get_by_client_generated_id(self, client_generated_id: uuid.UUID, user_id: int) -> Debt | None:
+        stmt = select(Debt).where(Debt.client_generated_id == client_generated_id, Debt.user_id == user_id)
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
 

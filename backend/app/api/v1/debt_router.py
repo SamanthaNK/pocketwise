@@ -6,7 +6,14 @@ from app.controllers import debt_controller
 from app.core.database import get_db
 from app.models.debt import DebtDirection
 from app.models.user import User
-from app.schemas.debt import DebtCreateRequest, DebtListResponse, DebtResponse
+from app.schemas.debt import (
+    DebtCreateRequest,
+    DebtListResponse,
+    DebtResponse,
+    DebtSettleRequest,
+    DebtSettleResponse,
+    DebtUpdateRequest,
+)
 
 router = APIRouter(prefix="/debts", tags=["Debts"])
 
@@ -28,6 +35,21 @@ async def create_debt(
     return await debt_controller.create_debt(current_user.id, payload, db)
 
 
-@router.put("/{debt_id}/settle", response_model=DebtResponse)
-async def settle_debt(debt_id: int, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
-    return await debt_controller.settle_debt(current_user.id, debt_id, db)
+@router.put("/{debt_id}", response_model=DebtResponse)
+async def update_debt(
+    debt_id: int,
+    payload: DebtUpdateRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return await debt_controller.update_debt(current_user.id, debt_id, payload, db)
+
+
+@router.put("/{debt_id}/settle", response_model=DebtSettleResponse)
+async def settle_debt(
+    debt_id: int,
+    payload: DebtSettleRequest = DebtSettleRequest(),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return await debt_controller.settle_debt(current_user.id, debt_id, payload, db)
