@@ -62,6 +62,13 @@ async def add_contribution(
     return await savings_goal_controller.add_contribution(current_user.id, goal_id, payload, db)
 
 
+@router.get("/{goal_id}/contributions", response_model=list[SavingsContributionResponse])
+async def list_contributions(
+    goal_id: int, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)
+):
+    return await savings_goal_controller.list_contributions(current_user.id, goal_id, db)
+
+
 @router.delete("/{goal_id}/contributions/{contribution_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_contribution(
     goal_id: int,

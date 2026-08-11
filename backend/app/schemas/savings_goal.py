@@ -4,6 +4,8 @@ from decimal import Decimal
 
 from pydantic import BaseModel, Field
 
+from app.models.savings_contribution import SavingsContributionType
+
 
 class SavingsGoalCreateRequest(BaseModel):
     name: str = Field(min_length=1, max_length=100)
@@ -34,12 +36,14 @@ class SavingsGoalResponse(BaseModel):
 class SavingsContributionCreateRequest(BaseModel):
     amount: Decimal = Field(gt=0)
     contribution_date: date
+    contribution_type: SavingsContributionType = SavingsContributionType.DEPOSIT
 
 
 class SavingsContributionResponse(BaseModel):
     id: int
     goal_id: int
     amount: Decimal
+    contribution_type: SavingsContributionType
     contribution_date: date
     client_generated_id: uuid.UUID
     created_at: datetime

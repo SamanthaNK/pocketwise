@@ -1,7 +1,7 @@
 from datetime import date
 
 from app.core.exceptions import AppException
-from app.models.savings_contribution import SavingsContribution
+from app.models.savings_contribution import SavingsContribution, SavingsContributionType
 from app.models.savings_goal import SavingsGoal
 from app.repositories.savings_contribution_repository import SavingsContributionRepository
 from app.repositories.savings_goal_repository import SavingsGoalRepository
@@ -37,10 +37,8 @@ class SavingsGoalService:
 
         if payload.name is not None:
             goal.name = payload.name
-
         if payload.target_amount is not None:
             goal.target_amount = payload.target_amount
-
         if payload.clear_target_date:
             goal.target_date = None
         elif payload.target_date is not None:
@@ -65,14 +63,30 @@ class SavingsGoalService:
     ) -> SavingsContributionResponse:
         await self._get_owned_goal(user_id, goal_id)
 
+        if payload.contribution_type == SavingsContributionType.WITHDRAWAL:
+            current_saved = await self.savings_contribution_repository.sum_for_goal(goal_id)
+            if payload.amount > current_saved:
+                raise AppException(
+                    status_code=409,
+                    error_code="INSUFFICIENT_SAVED_AMOUNT",
+                    message="You can't take out more than you've saved toward this goal.",
+                    field_errors={"amount": f"Only {current_saved} XAF is available to take out."},
+                )
+
         contribution = SavingsContribution(
             goal_id=goal_id,
             user_id=user_id,
             amount=payload.amount,
+            contribution_type=payload.contribution_type,
             contribution_date=payload.contribution_date,
         )
         created = await self.savings_contribution_repository.create(contribution)
         return SavingsContributionResponse.model_validate(created)
+
+    async def list_contributions(self, user_id: int, goal_id: int) -> list[SavingsContributionResponse]:
+        await self._get_owned_goal(user_id, goal_id)
+        contributions = await self.savings_contribution_repository.list_for_goal(goal_id, user_id)
+        return [SavingsContributionResponse.model_validate(c) for c in contributions]
 
     async def delete_contribution(self, user_id: int, goal_id: int, contribution_id: int) -> None:
         await self._get_owned_goal(user_id, goal_id)

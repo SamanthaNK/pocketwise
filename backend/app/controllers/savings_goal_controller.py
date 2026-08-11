@@ -48,5 +48,9 @@ async def add_contribution(
     return await _build_service(db).add_contribution(user_id, goal_id, payload)
 
 
+async def list_contributions(user_id: int, goal_id: int, db: AsyncSession) -> list[SavingsContributionResponse]:
+    return await _build_service(db).list_contributions(user_id, goal_id)
+
+
 async def delete_contribution(user_id: int, goal_id: int, contribution_id: int, db: AsyncSession) -> None:
     await _build_service(db).delete_contribution(user_id, goal_id, contribution_id)
