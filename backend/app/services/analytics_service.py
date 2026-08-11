@@ -14,8 +14,8 @@ from app.schemas.analytics import (
 )
 
 RECOMMENDATION_THRESHOLD = Decimal("0.20")
-
 MINIMUM_HISTORY_MONTHS = 1
+LOOKBACK_MONTHS = 3
 
 
 class AnalyticsService:
@@ -72,14 +72,20 @@ class AnalyticsService:
             user_id, current_start, current_end
         )
 
+        monthly_breakdowns: list[dict[int, Decimal]] = []
+        for i in range(1, LOOKBACK_MONTHS + 1):
+            month_start, month_end = self._month_bounds(self._shift_month(date.today(), -i))
+            rows = await self.analytics_repository.expense_breakdown_by_category(user_id, month_start, month_end)
+            monthly_breakdowns.append({category_id: amount for category_id, _n, _ic, amount in rows})
+
         recommendations: list[RecommendationItem] = []
         for category_id, name, _icon, current_amount in current_rows:
-            history = await self._historical_monthly_average(user_id, category_id)
-            if history is None:
+            amounts = [breakdown[category_id] for breakdown in monthly_breakdowns if category_id in breakdown]
+            if len(amounts) < MINIMUM_HISTORY_MONTHS:
                 continue
 
-            average, months_counted = history
-            if months_counted < MINIMUM_HISTORY_MONTHS or average <= 0:
+            average = sum(amounts) / len(amounts)
+            if average <= 0:
                 continue
 
             threshold_amount = average * (Decimal("1") + RECOMMENDATION_THRESHOLD)
@@ -97,22 +103,6 @@ class AnalyticsService:
                 )
 
         return AnalyticsRecommendationsResponse(recommendations=recommendations)
-
-    async def _historical_monthly_average(
-        self, user_id: int, category_id: int, lookback_months: int = 3
-    ) -> tuple[Decimal, int] | None:
-        today = date.today()
-        amounts: list[Decimal] = []
-        for i in range(1, lookback_months + 1):
-            month_start, month_end = self._month_bounds(self._shift_month(today, -i))
-            rows = await self.analytics_repository.expense_breakdown_by_category(user_id, month_start, month_end)
-            match = next((amount for cat_id, _n, _ic, amount in rows if cat_id == category_id), None)
-            if match is not None:
-                amounts.append(match)
-
-        if not amounts:
-            return None
-        return sum(amounts) / len(amounts), len(amounts)
 
     @staticmethod
     def _percent(part: Decimal, whole: Decimal) -> float:
