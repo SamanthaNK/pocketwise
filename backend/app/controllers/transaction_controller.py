@@ -34,3 +34,7 @@ async def get_transaction(user_id: int, transaction_id: int, db: AsyncSession) -
 
 async def list_transactions(user_id: int, filters: TransactionFilters, db: AsyncSession) -> TransactionListResponse:
     return await _build_service(db).list_transactions(user_id, filters)
+
+
+async def export_transactions_csv(user_id: int, filters: TransactionFilters, db: AsyncSession) -> str:
+    return await _build_service(db).export_csv(user_id, filters)

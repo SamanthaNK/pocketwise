@@ -1,5 +1,7 @@
+import csv
+import io
+
 from app.core.exceptions import AppException
-from app.models.category import CategoryType
 from app.models.transaction import Transaction
 from app.repositories.category_repository import CategoryRepository
 from app.repositories.payment_method_repository import PaymentMethodRepository
@@ -77,6 +79,30 @@ class TransactionService:
             net=total_income - total_expense,
             count=len(transactions),
         )
+
+    async def export_csv(self, user_id: int, filters: TransactionFilters) -> str:
+        """FR 4.8 (Could): CSV export, respecting the same filters as the
+        regular list. PNG/PDF export are deferred for now."""
+        transactions = await self.transaction_repository.list_for_export(user_id, filters)
+
+        categories = await self.category_repository.list_for_user(user_id, include_archived=True)
+        payment_methods = await self.payment_method_repository.list_for_user(user_id, include_archived=True)
+        category_names = {category.id: category.name for category in categories}
+        payment_method_labels = {pm.id: pm.label for pm in payment_methods}
+
+        buffer = io.StringIO()
+        writer = csv.writer(buffer)
+        writer.writerow(["Date", "Type", "Category", "Payment Method", "Amount (XAF)", "Description"])
+        for transaction in transactions:
+            writer.writerow([
+                transaction.transaction_date.isoformat(),
+                transaction.type.value,
+                category_names.get(transaction.category_id, "Unknown"),
+                payment_method_labels.get(transaction.payment_method_id, "") if transaction.payment_method_id else "",
+                str(transaction.amount),
+                transaction.description or "",
+            ])
+        return buffer.getvalue()
 
     async def _get_owned_transaction(self, user_id: int, transaction_id: int) -> Transaction:
         transaction = await self.transaction_repository.get_by_id(transaction_id, user_id)

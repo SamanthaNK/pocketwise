@@ -58,6 +58,14 @@ class TransactionRepository:
         result = await self.db.execute(stmt)
         return list(result.scalars().all())
 
+    async def list_for_export(self, user_id: int, filters: TransactionFilters) -> list[Transaction]:
+        stmt = select(Transaction)
+        stmt = self._apply_filters(stmt, user_id, filters)
+        sort_column = Transaction.transaction_date if filters.sort_by == "date" else Transaction.amount
+        stmt = stmt.order_by(sort_column.asc() if filters.sort_order == "asc" else sort_column.desc())
+        result = await self.db.execute(stmt)
+        return list(result.scalars().all())
+
     async def sum_totals_for_user(self, user_id: int, filters: TransactionFilters) -> tuple[Decimal, Decimal]:
         """Income/expense totals over the FULL filtered set, ignoring limit/offset."""
         income_case = case((Transaction.type == CategoryType.INCOME, Transaction.amount), else_=0)
