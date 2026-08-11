@@ -27,6 +27,7 @@ class UserResponse(BaseModel):
     name: str
     email: EmailStr
     privacy_mode_enabled: bool
+    currency_preference: str
     model_config = {"from_attributes": True}
 
 class ChangePasswordRequest(BaseModel):

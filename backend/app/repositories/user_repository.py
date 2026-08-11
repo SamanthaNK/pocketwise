@@ -35,3 +35,17 @@ class UserRepository:
         await self.db.commit()
         await self.db.refresh(user)
         return user
+
+    async def update_profile(self, user: User, name: str) -> User:
+        user.name = name
+        self.db.add(user)
+        await self.db.commit()
+        await self.db.refresh(user)
+        return user
+
+    async def update_currency(self, user: User, currency: str) -> User:
+        user.currency_preference = currency
+        self.db.add(user)
+        await self.db.commit()
+        await self.db.refresh(user)
+        return user

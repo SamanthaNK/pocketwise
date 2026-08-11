@@ -14,7 +14,7 @@ from app.schemas.auth import (
     TokenResponse,
     UserResponse,
 )
-from app.schemas.user import PrivacyModeUpdateRequest
+from app.schemas.user import CurrencyUpdateRequest, PrivacyModeUpdateRequest, ProfileUpdateRequest
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -58,3 +58,21 @@ async def update_privacy_mode(
     current_user: User = Depends(get_current_user),
 ):
     return await user_controller.update_privacy_mode(current_user, payload, db)
+
+
+@users_router.put("/users/me/profile", response_model=UserResponse)
+async def update_profile(
+    payload: ProfileUpdateRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return await user_controller.update_profile(current_user, payload, db)
+
+
+@users_router.put("/users/me/currency", response_model=UserResponse)
+async def update_currency(
+    payload: CurrencyUpdateRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return await user_controller.update_currency(current_user, payload, db)
