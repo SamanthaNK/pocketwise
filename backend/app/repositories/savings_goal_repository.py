@@ -37,3 +37,9 @@ class SavingsGoalRepository:
     async def delete(self, goal: SavingsGoal) -> None:
         await self.db.delete(goal)  # cascades to savings_contributions
         await self.db.commit()
+    async def get_by_client_generated_id(self, client_generated_id, user_id: int):
+        stmt = select(SavingsGoal).where(
+            SavingsGoal.client_generated_id == client_generated_id, SavingsGoal.user_id == user_id
+        )
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()

@@ -66,3 +66,7 @@ class BudgetRepository:
     async def delete(self, budget: Budget) -> None:
         await self.db.delete(budget)
         await self.db.commit()
+    async def get_by_client_generated_id(self, client_generated_id, user_id: int):
+        stmt = select(Budget).where(Budget.client_generated_id == client_generated_id, Budget.user_id == user_id)
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
