@@ -20,4 +20,9 @@ class BudgetLocalRepository {
     final rows = await db.query('budgets', where: 'is_deleted = 0 AND is_active = 1');
     return rows.map(BudgetModel.fromLocalMap).toList();
   }
+
+  Future<void> softDelete(int id) async {
+    final db = await _appDatabase.instance;
+    await db.update('budgets', {'is_deleted': 1}, where: 'id = ?', whereArgs: [id]);
+  }
 }

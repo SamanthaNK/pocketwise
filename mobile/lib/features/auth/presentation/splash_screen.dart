@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/app_colors.dart';
@@ -28,12 +30,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       return;
     }
 
-    try {
-      await authRepository.hydrateIfNeeded();
-      _goTo(const DashboardScreen());
-    } catch (_) {
-      _goTo(const LoginScreen());
-    }
+    // Hydration is best-effort background work; a valid session is enough to
+    // enter the app and read whatever is already cached locally.
+    unawaited(authRepository.hydrateInBackground());
+    _goTo(const DashboardScreen());
   }
 
   void _goTo(Widget screen) {

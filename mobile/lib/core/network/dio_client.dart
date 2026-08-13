@@ -1,5 +1,21 @@
+import 'dart:io' show Platform;
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../storage/secure_storage_service.dart';
+
+/// Resolves the API base URL for the current platform.
+///
+/// Override at build/run time with `--dart-define=API_BASE_URL=http://<lan-ip>:8000/v1`
+/// (required for physical devices, which can't reach the dev machine via
+/// localhost or the Android-emulator-only 10.0.2.2 alias).
+String _resolveBaseUrl() {
+  const override = String.fromEnvironment('API_BASE_URL');
+  if (override.isNotEmpty) return override;
+
+  if (kIsWeb) return 'http://localhost:8000/v1';
+  if (Platform.isAndroid) return 'http://10.0.2.2:8000/v1';
+  return 'http://localhost:8000/v1';
+}
 
 class DioClient {
   DioClient({
@@ -9,7 +25,7 @@ class DioClient {
         _onAuthFailure = onAuthFailure {
     dio = Dio(
       BaseOptions(
-        baseUrl: 'http://10.0.2.2:8000/v1',
+        baseUrl: _resolveBaseUrl(),
         connectTimeout: const Duration(seconds: 15),
         receiveTimeout: const Duration(seconds: 15),
       ),
