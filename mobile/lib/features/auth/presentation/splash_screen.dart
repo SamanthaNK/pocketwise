@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../dashboard/presentation/dashboard_screen.dart';
+import '../../../core/presentation/app_shell.dart';
 import '../providers/auth_providers.dart';
 import 'login_screen.dart';
 
@@ -33,7 +33,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     // Hydration is best-effort background work; a valid session is enough to
     // enter the app and read whatever is already cached locally.
     unawaited(authRepository.hydrateInBackground());
-    _goTo(const DashboardScreen());
+    _goTo(const AppShell());
   }
 
   void _goTo(Widget screen) {

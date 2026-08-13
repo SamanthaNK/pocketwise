@@ -16,4 +16,9 @@ class DebtApi {
     final data = response.data as Map<String, dynamic>;
     return (data['debts'] as List).map((e) => DebtModel.fromServerJson(e as Map<String, dynamic>)).toList();
   }
+
+  Future<DebtModel> settle(int debtId) async {
+    final response = await _dio.put('/debts/$debtId/settle');
+    return DebtModel.fromServerJson(response.data as Map<String, dynamic>);
+  }
 }

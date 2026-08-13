@@ -6,6 +6,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/providers/feature_providers.dart';
 import '../../../core/providers/picker_providers.dart';
 import '../../../core/utils/amount_utils.dart';
+import '../../../shared/widgets/masked_amount.dart';
 import '../models/transaction_model.dart';
 import 'edit_transaction_screen.dart';
 import 'quick_add_sheet.dart';
@@ -105,14 +106,9 @@ class TransactionListScreen extends ConsumerWidget {
                                       ],
                                     ),
                                   ),
-                                  Text(
+                                  MaskedAmount(
                                     '${isExpense ? '−' : '+'} ${formatXaf(t.amount)}',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: isExpense ? AppColors.textPrimary : AppColors.success,
-                                      fontFeatures: const [FontFeature.tabularFigures()],
-                                    ),
+                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: isExpense ? AppColors.textPrimary : AppColors.success),
                                   ),
                                 ],
                               ),

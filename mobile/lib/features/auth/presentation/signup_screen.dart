@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../core/presentation/app_shell.dart';
 import '../../../core/utils/error_utils.dart';
-import '../../dashboard/presentation/dashboard_screen.dart';
 import '../providers/auth_providers.dart';
 import 'login_screen.dart';
 
@@ -41,7 +41,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           );
       if (!mounted) return;
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const DashboardScreen()),
+        MaterialPageRoute(builder: (_) => const AppShell()),
         (route) => false,
       );
     } catch (e) {

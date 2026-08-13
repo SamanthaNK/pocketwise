@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/providers/picker_providers.dart';
 import '../../../core/utils/amount_utils.dart';
 import '../../../core/utils/error_utils.dart';
+import '../../../shared/widgets/masked_amount.dart';
 import '../../transactions/presentation/quick_add_sheet.dart';
 import '../models/budget_model.dart';
 import '../providers/budget_providers.dart';
@@ -77,19 +78,6 @@ class BudgetsScreen extends ConsumerWidget {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.brand,
-        onPressed: () async {
-          final added = await showModalBottomSheet<bool>(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (_) => const QuickAddSheet(),
-          );
-          if (added == true) ref.invalidate(activeBudgetsProvider);
-        },
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
     );
   }
 
@@ -116,10 +104,8 @@ class BudgetsScreen extends ConsumerWidget {
                     Text(category?.name ?? 'Unknown', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary)),
                   ]),
                   Row(children: [
-                    Text(formatXaf(b.spent),
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary, fontFeatures: [FontFeature.tabularFigures()])),
-                    Text(' / ${formatXaf(b.limitAmount)}',
-                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary, fontFeatures: [FontFeature.tabularFigures()])),
+                    MaskedAmount(formatXaf(b.spent), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary)),
+                    MaskedAmount(' / ${formatXaf(b.limitAmount)}', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
                   ]),
                 ],
               ),
@@ -166,8 +152,7 @@ class BudgetsScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(labels[b.budgetGroup] ?? b.budgetGroup ?? '', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-                  Text('${formatXaf(b.spent)} / ${formatXaf(b.limitAmount)}',
-                      style: const TextStyle(fontSize: 13, color: AppColors.textSecondary, fontFeatures: [FontFeature.tabularFigures()])),
+                  MaskedAmount('${formatXaf(b.spent)} / ${formatXaf(b.limitAmount)}', style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
                 ],
               ),
               const SizedBox(height: 10),

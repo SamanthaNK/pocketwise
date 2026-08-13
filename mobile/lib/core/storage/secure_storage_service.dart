@@ -9,6 +9,10 @@ class SecureStorageService {
   static const _refreshTokenKey = 'refresh_token';
   static const _deviceIdKey = 'device_id';
   static const _hasHydratedKey = 'has_hydrated';
+  static const _privacyModeKey = 'privacy_mode_enabled';
+
+  Future<bool> readPrivacyMode() async => (await _storage.read(key: _privacyModeKey)) == 'true';
+  Future<void> writePrivacyMode(bool enabled) => _storage.write(key: _privacyModeKey, value: enabled.toString());
 
   Future<void> writeTokens({required String accessToken, required String refreshToken}) async {
     await _storage.write(key: _accessTokenKey, value: accessToken);
