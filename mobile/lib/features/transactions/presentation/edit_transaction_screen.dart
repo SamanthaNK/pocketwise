@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/providers/picker_providers.dart';
+import '../../../shared/utils/category_icons.dart';
+import '../../../shared/widgets/confirmation_sheet.dart';
 import '../models/transaction_model.dart';
 import '../providers/transaction_write_controller.dart';
-import 'quick_add_sheet.dart';
 
 class EditTransactionScreen extends ConsumerStatefulWidget {
   const EditTransactionScreen({super.key, required this.transaction});
@@ -77,21 +79,14 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
   }
 
   Future<void> _delete() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Delete this transaction?'),
-        content: const Text('This removes it from your device. This can\'t be undone.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
-          ),
-        ],
-      ),
+    final confirmed = await showConfirmationSheet(
+      context,
+      title: 'Delete this transaction?',
+      message: 'This removes it from your device. This can\'t be undone.',
+      confirmLabel: 'Delete',
+      isDestructive: true,
     );
-    if (confirmed != true) return;
+    if (!confirmed) return;
 
     await ref.read(transactionWriteControllerProvider).deleteTransaction(widget.transaction.clientGeneratedId);
     if (mounted) Navigator.of(context).pop(true);
@@ -110,7 +105,7 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
         foregroundColor: AppColors.textPrimary,
         title: const Text('Edit transaction', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         actions: [
-          IconButton(onPressed: _isSaving ? null : _delete, icon: const Icon(Icons.delete_outline, color: AppColors.error)),
+          IconButton(onPressed: _isSaving ? null : _delete, icon: const Icon(Symbols.delete_outline_rounded, color: AppColors.error)),
         ],
       ),
       body: SafeArea(
@@ -154,7 +149,7 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
-                          color: selected ? AppColors.brand.withOpacity(0.08) : const Color(0xFFF3F2F0),
+                          color: selected ? AppColors.brand.withValues(alpha: 0.08) : AppColors.chipBackground,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -192,7 +187,7 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 decoration: BoxDecoration(border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(12)),
                 child: Row(children: [
-                  const Icon(Icons.calendar_today, size: 16, color: AppColors.textSecondary),
+                  const Icon(Symbols.calendar_today_rounded, size: 16, color: AppColors.textSecondary),
                   const SizedBox(width: 10),
                   Text(DateFormat('d MMM yyyy').format(_date), style: const TextStyle(fontSize: 14, color: AppColors.textPrimary)),
                 ]),
@@ -248,7 +243,7 @@ class _EditTransactionScreenState extends ConsumerState<EditTransactionScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: selected ? AppColors.brand.withOpacity(0.08) : const Color(0xFFF3F2F0),
+          color: selected ? AppColors.brand.withValues(alpha: 0.08) : AppColors.chipBackground,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(label, style: TextStyle(fontSize: 13, color: selected ? AppColors.brand : AppColors.textPrimary)),

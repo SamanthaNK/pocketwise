@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../shared/widgets/fold_clipper.dart';
 import '../models/debt_model.dart';
@@ -107,7 +108,7 @@ class _AddEditDebtSheetState extends ConsumerState<AddEditDebtSheet> {
                 const SizedBox(height: 20),
                 Container(
                   padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(color: const Color(0xFFF3F2F0), borderRadius: BorderRadius.circular(999)),
+                  decoration: BoxDecoration(color: AppColors.chipBackground, borderRadius: BorderRadius.circular(999)),
                   child: Row(children: [
                     Expanded(child: _segment('Owed to me', 'owed_to_user')),
                     Expanded(child: _segment('I owe', 'owed_by_user')),
@@ -130,12 +131,12 @@ class _AddEditDebtSheetState extends ConsumerState<AddEditDebtSheet> {
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     decoration: BoxDecoration(border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(12)),
                     child: Row(children: [
-                      const Icon(Icons.calendar_today, size: 16, color: AppColors.textSecondary),
+                      const Icon(Symbols.calendar_today_rounded, size: 16, color: AppColors.textSecondary),
                       const SizedBox(width: 10),
                       Text(_dueDate == null ? 'No due date' : DateFormat('d MMM yyyy').format(_dueDate!), style: const TextStyle(fontSize: 14)),
                       const Spacer(),
                       if (_dueDate != null)
-                        GestureDetector(onTap: () => setState(() => _dueDate = null), child: const Icon(Icons.close, size: 16, color: AppColors.textSecondary)),
+                        GestureDetector(onTap: () => setState(() => _dueDate = null), child: const Icon(Symbols.close_rounded, size: 16, color: AppColors.textSecondary)),
                     ]),
                   ),
                 ),
@@ -179,7 +180,7 @@ class _AddEditDebtSheetState extends ConsumerState<AddEditDebtSheet> {
         decoration: BoxDecoration(
           color: selected ? AppColors.surface : Colors.transparent,
           borderRadius: BorderRadius.circular(999),
-          boxShadow: selected ? [BoxShadow(color: Colors.black.withOpacity(0.09), blurRadius: 3, offset: const Offset(0, 1))] : null,
+          boxShadow: selected ? [BoxShadow(color: Colors.black.withValues(alpha: 0.09), blurRadius: 3, offset: const Offset(0, 1))] : null,
         ),
         alignment: Alignment.center,
         child: Text(label, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: selected ? AppColors.textPrimary : AppColors.textSecondary)),

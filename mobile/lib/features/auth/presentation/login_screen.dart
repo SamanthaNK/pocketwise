@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/presentation/app_shell.dart';
 import '../../../core/utils/error_utils.dart';
@@ -61,8 +62,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('PocketWise',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: AppColors.brand)),
+                Image.asset('assets/branding/logo_full.png', height: 36),
                 const SizedBox(height: 40),
                 const Text('Welcome back',
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
@@ -85,7 +85,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   obscureText: _obscurePassword,
                   validator: (v) => (v == null || v.isEmpty) ? 'Password is required.' : null,
                   suffixIcon: IconButton(
-                    icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, color: AppColors.textSecondary),
+                    icon: Icon(_obscurePassword ? Symbols.visibility_off_rounded : Symbols.visibility_rounded, color: AppColors.textSecondary),
                     onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                   ),
                 ),

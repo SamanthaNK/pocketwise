@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.api.v1.router import api_router
+from app.core.error_messages import friendly_field_error
 from app.core.exceptions import AppException
 
 logger = logging.getLogger("pocketwise")
@@ -47,7 +48,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     field_errors: dict[str, str] = {}
     for error in exc.errors():
         field_name = str(error["loc"][-1])
-        field_errors[field_name] = error["msg"]
+        field_errors[field_name] = friendly_field_error(field_name, error)
 
     return _error_envelope(422, "VALIDATION_ERROR", "Some fields need your attention.", field_errors)
 
@@ -57,6 +58,9 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     error_codes = {401: "UNAUTHORIZED", 403: "FORBIDDEN", 404: "NOT_FOUND", 405: "METHOD_NOT_ALLOWED"}
     error_code = error_codes.get(exc.status_code, "HTTP_ERROR")
     message = exc.detail if isinstance(exc.detail, str) else "Something went wrong."
+    if exc.status_code == 401 and message == "Not authenticated":
+        error_code = "INVALID_SESSION"
+        message = "Invalid or expired session. Please log in again."
     return _error_envelope(exc.status_code, error_code, message)
 
 

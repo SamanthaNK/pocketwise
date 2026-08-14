@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/utils/amount_utils.dart';
+import '../../../core/utils/error_utils.dart';
 import '../../../shared/widgets/masked_amount.dart';
 import '../../debts/models/debt_model.dart';
 import '../../debts/presentation/add_edit_debt_sheet.dart';
@@ -46,7 +48,7 @@ class _SavingsDebtsScreenState extends ConsumerState<SavingsDebtsScreen> {
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
               child: Container(
                 padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(color: const Color(0xFFF3F2F0), borderRadius: BorderRadius.circular(999)),
+                decoration: BoxDecoration(color: AppColors.chipBackground, borderRadius: BorderRadius.circular(999)),
                 child: Row(children: [
                   Expanded(child: _segment('Goals', 0)),
                   Expanded(child: _segment('Debts', 1)),
@@ -69,7 +71,7 @@ class _SavingsDebtsScreenState extends ConsumerState<SavingsDebtsScreen> {
         decoration: BoxDecoration(
           color: selected ? AppColors.surface : Colors.transparent,
           borderRadius: BorderRadius.circular(999),
-          boxShadow: selected ? [BoxShadow(color: Colors.black.withOpacity(0.09), blurRadius: 3, offset: const Offset(0, 1))] : null,
+          boxShadow: selected ? [BoxShadow(color: Colors.black.withValues(alpha: 0.09), blurRadius: 3, offset: const Offset(0, 1))] : null,
         ),
         alignment: Alignment.center,
         child: Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: selected ? AppColors.textPrimary : AppColors.textSecondary)),
@@ -121,7 +123,7 @@ class _GoalsTab extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 decoration: BoxDecoration(border: Border.all(color: AppColors.border, width: 1.5), borderRadius: BorderRadius.circular(16)),
                 child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Icon(Icons.add, size: 18, color: AppColors.textSecondary),
+                  Icon(Symbols.add_rounded, size: 18, color: AppColors.textSecondary),
                   SizedBox(width: 8),
                   Text('New goal', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textSecondary)),
                 ]),
@@ -142,7 +144,7 @@ class _GoalCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final percent = goal.targetAmount > 0 ? (goal.savedAmount / goal.targetAmount).clamp(0.0, 1.0) : 0.0;
     final isReached = goal.savedAmount >= goal.targetAmount;
-    final daysRemaining = goal.targetDate == null ? null : goal.targetDate!.difference(DateTime.now()).inDays;
+    final daysRemaining = goal.targetDate?.difference(DateTime.now()).inDays;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -168,7 +170,7 @@ class _GoalCard extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 14),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
+          const Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text('Saved', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
             Text('Target', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
           ]),
@@ -208,7 +210,7 @@ class _GoalCard extends ConsumerWidget {
                           ref.invalidate(goalContributionsProvider(goal.clientGeneratedId));
                         }
                       },
-                      icon: const Icon(Icons.add, size: 16),
+                      icon: const Icon(Symbols.add_rounded, size: 16),
                       label: const Text('Add funds', style: TextStyle(fontSize: 13)),
                       style: OutlinedButton.styleFrom(foregroundColor: AppColors.textPrimary, side: const BorderSide(color: AppColors.border), padding: const EdgeInsets.symmetric(vertical: 10)),
                     ),
@@ -225,7 +227,7 @@ class _GoalCard extends ConsumerWidget {
                   );
                   if (result == true) ref.invalidate(savingsGoalsProvider);
                 },
-                icon: const Icon(Icons.edit, size: 16),
+                icon: const Icon(Symbols.edit_rounded, size: 16),
                 label: const Text('Edit', style: TextStyle(fontSize: 13)),
                 style: OutlinedButton.styleFrom(foregroundColor: AppColors.textPrimary, side: const BorderSide(color: AppColors.border), padding: const EdgeInsets.symmetric(vertical: 10)),
               ),
@@ -297,7 +299,7 @@ class _DebtsTab extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   decoration: BoxDecoration(border: Border.all(color: AppColors.border, width: 1.5), borderRadius: BorderRadius.circular(16)),
                   child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Icon(Icons.add, size: 18, color: AppColors.textSecondary),
+                    Icon(Symbols.add_rounded, size: 18, color: AppColors.textSecondary),
                     SizedBox(width: 8),
                     Text('Record a debt', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textSecondary)),
                   ]),
@@ -353,7 +355,7 @@ class _DebtsTab extends ConsumerWidget {
                 children: [
                   CircleAvatar(
                     radius: 18,
-                    backgroundColor: AppColors.brand.withOpacity(0.08),
+                    backgroundColor: AppColors.brand.withValues(alpha: 0.08),
                     child: Text(_initials(d.personName), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.brand)),
                   ),
                   const SizedBox(width: 12),
@@ -375,7 +377,7 @@ class _DebtsTab extends ConsumerWidget {
                     onTap: () => _settleDebt(context, ref, d),
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(color: AppColors.brand.withOpacity(0.08), borderRadius: BorderRadius.circular(999)),
+                      decoration: BoxDecoration(color: AppColors.brand.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(999)),
                       child: const Text('Settle', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.brand)),
                     ),
                   ),
@@ -401,7 +403,7 @@ class _DebtsTab extends ConsumerWidget {
       ref.invalidate(debtsProvider);
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(extractErrorMessage(e))));
       }
     }
   }

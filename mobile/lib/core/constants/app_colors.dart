@@ -11,6 +11,7 @@ class AppColors {
   static const textPrimary = Color(0xFF1E1E1E);
   static const textSecondary = Color(0xFF6B6B6B);
   static const border = Color(0xFFECEAE8);
+  static const chipBackground = Color(0xFFF3F2F0);
   static const success = Color(0xFF2E8B57);
   static const warning = Color(0xFFD98C00);
   static const error = Color(0xFFC84B31);

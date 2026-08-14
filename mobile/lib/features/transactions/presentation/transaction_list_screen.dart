@@ -1,11 +1,12 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/providers/feature_providers.dart';
 import '../../../core/providers/picker_providers.dart';
 import '../../../core/utils/amount_utils.dart';
+import '../../../shared/utils/category_icons.dart';
 import '../../../shared/widgets/masked_amount.dart';
 import '../models/transaction_model.dart';
 import 'edit_transaction_screen.dart';
@@ -43,7 +44,7 @@ class TransactionListScreen extends ConsumerWidget {
                 onChanged: (v) => ref.read(_searchQueryProvider.notifier).state = v,
                 decoration: InputDecoration(
                   hintText: 'Search descriptions',
-                  prefixIcon: const Icon(Icons.search, size: 20, color: AppColors.textSecondary),
+                  prefixIcon: const Icon(Symbols.search_rounded, size: 20, color: AppColors.textSecondary),
                   filled: true,
                   fillColor: AppColors.surface,
                   contentPadding: const EdgeInsets.symmetric(vertical: 12),
@@ -89,7 +90,7 @@ class TransactionListScreen extends ConsumerWidget {
                               decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.border))),
                               child: Row(
                                 children: [
-                                  Icon(iconForCategoryLocal(category?.icon), size: 19, color: AppColors.textSecondary),
+                                  Icon(iconForCategory(category?.icon), size: 19, color: AppColors.textSecondary),
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Column(
@@ -135,43 +136,8 @@ class TransactionListScreen extends ConsumerWidget {
           );
           if (added == true) ref.invalidate(_filteredTransactionsProvider);
         },
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Symbols.add_rounded, color: Colors.white),
       ),
     );
-  }
-}
-
-IconData iconForCategoryLocal(String? symbolName) {
-  switch (symbolName) {
-    case 'restaurant':
-      return Icons.restaurant;
-    case 'directions_bus':
-      return Icons.directions_bus;
-    case 'bolt':
-      return Icons.bolt;
-    case 'home':
-      return Icons.home;
-    case 'sim_card':
-      return Icons.sim_card;
-    case 'medical_services':
-      return Icons.medical_services;
-    case 'school':
-      return Icons.school;
-    case 'shopping_bag':
-      return Icons.shopping_bag;
-    case 'celebration':
-      return Icons.celebration;
-    case 'savings':
-      return Icons.savings;
-    case 'payments':
-      return Icons.payments;
-    case 'storefront':
-      return Icons.storefront;
-    case 'redeem':
-      return Icons.redeem;
-    case 'account_balance_wallet':
-      return Icons.account_balance_wallet;
-    default:
-      return Icons.category;
   }
 }

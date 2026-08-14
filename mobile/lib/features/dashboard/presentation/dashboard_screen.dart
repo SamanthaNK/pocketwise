@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/providers/privacy_mode_provider.dart';
 import '../../../core/utils/amount_utils.dart';
+import '../../../shared/utils/category_icons.dart';
 import '../../../shared/widgets/masked_amount.dart';
 import '../../analytics/presentation/analytics_screen.dart';
 import '../../budgets/presentation/budgets_screen.dart';
 import '../../savings/presentation/savings_debts_screen.dart';
-import '../../transactions/presentation/quick_add_sheet.dart';
 import '../../transactions/presentation/transaction_list_screen.dart';
 import '../providers/dashboard_providers.dart';
 
@@ -27,10 +28,11 @@ class DashboardScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Image.asset('assets/branding/logo_full.png', height: 28),
                   IconButton(
-                    icon: Icon(isPrivate ? Icons.visibility_off : Icons.visibility, color: AppColors.textSecondary),
+                    icon: Icon(isPrivate ? Symbols.visibility_off_rounded : Symbols.visibility_rounded, color: AppColors.textSecondary),
                     onPressed: () => ref.read(privacyModeProvider.notifier).toggle(),
                   ),
                 ],
@@ -51,13 +53,13 @@ class DashboardScreen extends ConsumerWidget {
                       _balanceCard(data),
                       const SizedBox(height: 16),
                       Row(children: [
-                        Expanded(child: _quickLinkTile(icon: Icons.donut_small, label: 'Budgets', onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BudgetsScreen())))),
+                        Expanded(child: _quickLinkTile(icon: Symbols.donut_small_rounded, label: 'Budgets', onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const BudgetsScreen())))),
                         const SizedBox(width: 8),
-                        Expanded(child: _quickLinkTile(icon: Icons.savings, label: 'Savings', onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SavingsDebtsScreen())))),
+                        Expanded(child: _quickLinkTile(icon: Symbols.savings_rounded, label: 'Savings', onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SavingsDebtsScreen())))),
                         const SizedBox(width: 8),
-                        Expanded(child: _quickLinkTile(icon: Icons.handshake, label: 'Debts', onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SavingsDebtsScreen(initialTab: 1))))),
+                        Expanded(child: _quickLinkTile(icon: Symbols.handshake_rounded, label: 'Debts', onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SavingsDebtsScreen(initialTab: 1))))),
                         const SizedBox(width: 8),
-                        Expanded(child: _quickLinkTile(icon: Icons.bar_chart, label: 'Analytics', onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AnalyticsScreen())))),
+                        Expanded(child: _quickLinkTile(icon: Symbols.bar_chart_rounded, label: 'Analytics', onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AnalyticsScreen())))),
                       ]),
                       const SizedBox(height: 16),
                       Row(
@@ -101,12 +103,12 @@ class DashboardScreen extends ConsumerWidget {
           const Divider(color: AppColors.border, height: 1),
           const SizedBox(height: 12),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Row(children: const [Icon(Icons.arrow_upward, size: 13, color: AppColors.success), SizedBox(width: 6), Text('Income · this month', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))]),
+            const Row(children: [Icon(Symbols.arrow_upward_rounded, size: 13, color: AppColors.success), SizedBox(width: 6), Text('Income · this month', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))]),
             MaskedAmount('+ ${formatXaf(data.monthIncome)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textPrimary)),
           ]),
           const SizedBox(height: 8),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Row(children: const [Icon(Icons.arrow_downward, size: 13, color: AppColors.error), SizedBox(width: 6), Text('Expenses · this month', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))]),
+            const Row(children: [Icon(Symbols.arrow_downward_rounded, size: 13, color: AppColors.error), SizedBox(width: 6), Text('Expenses · this month', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))]),
             MaskedAmount('− ${formatXaf(data.monthExpense)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textPrimary)),
           ]),
         ],

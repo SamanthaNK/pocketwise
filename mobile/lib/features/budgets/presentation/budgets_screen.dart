@@ -1,12 +1,12 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/providers/picker_providers.dart';
 import '../../../core/utils/amount_utils.dart';
 import '../../../core/utils/error_utils.dart';
+import '../../../shared/utils/category_icons.dart';
 import '../../../shared/widgets/masked_amount.dart';
-import '../../transactions/presentation/quick_add_sheet.dart';
 import '../models/budget_model.dart';
 import '../providers/budget_providers.dart';
 import 'add_edit_budget_sheet.dart';
@@ -64,7 +64,7 @@ class BudgetsScreen extends ConsumerWidget {
                         child: const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.add, size: 18, color: AppColors.textSecondary),
+                            Icon(Symbols.add_rounded, size: 18, color: AppColors.textSecondary),
                             SizedBox(width: 8),
                             Text('Add budget', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textSecondary)),
                           ],
@@ -118,12 +118,11 @@ class BudgetsScreen extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    percent >= 1.0
-                        ? 'Running a little higher than usual'
-                        : (percent >= 0.8 ? 'This category is trending up this month' : '${formatXaf(b.limitAmount - b.spent)} XAF remaining'),
-                    style: TextStyle(fontSize: 12, color: color),
-                  ),
+                  percent >= 1.0
+                      ? Text('Running a little higher than usual', style: TextStyle(fontSize: 12, color: color))
+                      : (percent >= 0.8
+                          ? Text('This category is trending up this month', style: TextStyle(fontSize: 12, color: color))
+                          : MaskedAmount('${formatXaf(b.limitAmount - b.spent)} XAF remaining', style: TextStyle(fontSize: 12, color: color))),
                   Text('${(percent * 100).round()}%', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: color)),
                 ],
               ),

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/providers/privacy_mode_provider.dart';
 import '../../../core/sync/sync_providers.dart';
 import '../../../core/sync/sync_status.dart';
 import '../../../core/utils/error_utils.dart';
+import '../../../shared/widgets/confirmation_sheet.dart';
 import '../../auth/presentation/login_screen.dart';
 import '../../auth/providers/auth_providers.dart';
 import '../providers/settings_providers.dart';
@@ -38,19 +40,19 @@ class SettingsScreen extends ConsumerWidget {
             const SizedBox(height: 16),
             _sectionLabel('Privacy'),
             _card([
-              _toggleRow(icon: Icons.visibility_off, label: 'Privacy Mode', value: isPrivate, onChanged: (_) => ref.read(privacyModeProvider.notifier).toggle()),
+              _toggleRow(icon: Symbols.visibility_off_rounded, label: 'Privacy Mode', value: isPrivate, onChanged: (_) => ref.read(privacyModeProvider.notifier).toggle()),
             ]),
             const SizedBox(height: 16),
             _sectionLabel('Sync'),
             _card([
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.sync, color: AppColors.textSecondary),
+                leading: const Icon(Symbols.sync_rounded, color: AppColors.textSecondary),
                 title: const Text('Sync now', style: TextStyle(fontSize: 14, color: AppColors.textPrimary)),
                 subtitle: Text(_syncStatusLabel(syncStatus), style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
                 trailing: syncStatus == SyncStatus.syncing
                     ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.brand))
-                    : const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+                    : const Icon(Symbols.chevron_right_rounded, color: AppColors.textSecondary),
                 onTap: () => ref.read(syncManagerProvider).syncNow(),
               ),
             ]),
@@ -59,18 +61,18 @@ class SettingsScreen extends ConsumerWidget {
             _card([
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.password, color: AppColors.textSecondary),
+                leading: const Icon(Symbols.password_rounded, color: AppColors.textSecondary),
                 title: const Text('Change password', style: TextStyle(fontSize: 14, color: AppColors.textPrimary)),
-                trailing: const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+                trailing: const Icon(Symbols.chevron_right_rounded, color: AppColors.textSecondary),
                 onTap: () => _openChangePassword(context, ref),
               ),
             ]),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(color: const Color(0xFFF3F2F0), borderRadius: BorderRadius.circular(16)),
+              decoration: BoxDecoration(color: AppColors.chipBackground, borderRadius: BorderRadius.circular(16)),
               child: const Row(children: [
-                Icon(Icons.offline_bolt, size: 18, color: AppColors.textSecondary),
+                Icon(Symbols.offline_bolt_rounded, size: 18, color: AppColors.textSecondary),
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
@@ -135,7 +137,7 @@ class SettingsScreen extends ConsumerWidget {
               ],
             ),
           ),
-          IconButton(icon: const Icon(Icons.edit, size: 20, color: AppColors.textSecondary), onPressed: () => _openEditProfile(context, ref, user['name'] as String? ?? '')),
+          IconButton(icon: const Icon(Symbols.edit_rounded, size: 20, color: AppColors.textSecondary), onPressed: () => _openEditProfile(context, ref, user['name'] as String? ?? '')),
         ],
       ),
     );
@@ -166,22 +168,84 @@ class SettingsScreen extends ConsumerWidget {
       contentPadding: EdgeInsets.zero,
       leading: Icon(icon, color: AppColors.textSecondary),
       title: Text(label, style: const TextStyle(fontSize: 14, color: AppColors.textPrimary)),
-      trailing: Switch(value: value, activeColor: AppColors.brand, onChanged: onChanged),
+      trailing: Switch(value: value, activeThumbColor: AppColors.brand, onChanged: onChanged),
+    );
+  }
+
+  Future<T?> _showFormSheet<T>(
+    BuildContext context, {
+    required String title,
+    required Widget content,
+    required String primaryLabel,
+    required T? Function() onPrimary,
+  }) {
+    return showModalBottomSheet<T>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (sheetContext) => Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(sheetContext).viewInsets.bottom),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(999))),
+                ),
+                const SizedBox(height: 20),
+                Text(title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                const SizedBox(height: 16),
+                content,
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(sheetContext),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.textPrimary,
+                          side: const BorderSide(color: AppColors.border),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(sheetContext, onPrimary()),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.brand,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: Text(primaryLabel),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
   Future<void> _openEditProfile(BuildContext context, WidgetRef ref, String currentName) async {
     final controller = TextEditingController(text: currentName);
-    final newName = await showDialog<String>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Edit name'),
-        content: TextField(controller: controller, decoration: const InputDecoration(hintText: 'Your name')),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, controller.text.trim()), child: const Text('Save')),
-        ],
-      ),
+    final newName = await _showFormSheet<String>(
+      context,
+      title: 'Edit name',
+      content: TextField(controller: controller, autofocus: true, decoration: const InputDecoration(hintText: 'Your name')),
+      primaryLabel: 'Save',
+      onPrimary: () => controller.text.trim(),
     );
     if (newName == null || newName.isEmpty) return;
 
@@ -197,23 +261,19 @@ class SettingsScreen extends ConsumerWidget {
     final currentController = TextEditingController();
     final newController = TextEditingController();
 
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Change password'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: currentController, obscureText: true, decoration: const InputDecoration(hintText: 'Current password')),
-            const SizedBox(height: 8),
-            TextField(controller: newController, obscureText: true, decoration: const InputDecoration(hintText: 'New password (min. 8 characters)')),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Save')),
+    final confirmed = await _showFormSheet<bool>(
+      context,
+      title: 'Change password',
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(controller: currentController, obscureText: true, decoration: const InputDecoration(hintText: 'Current password')),
+          const SizedBox(height: 8),
+          TextField(controller: newController, obscureText: true, decoration: const InputDecoration(hintText: 'New password (min. 8 characters)')),
         ],
       ),
+      primaryLabel: 'Save',
+      onPrimary: () => true,
     );
 
     if (confirmed != true) return;
@@ -231,18 +291,14 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _logout(BuildContext context, WidgetRef ref) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Log out?'),
-        content: const Text('You can log back in anytime — your data stays safe on the server.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Log out')),
-        ],
-      ),
+    final confirmed = await showConfirmationSheet(
+      context,
+      title: 'Log out?',
+      message: 'You can log back in anytime — your data stays safe on the server.',
+      confirmLabel: 'Log out',
+      isDestructive: true,
     );
-    if (confirmed != true) return;
+    if (!confirmed) return;
 
     await ref.read(authRepositoryProvider).logout();
     if (context.mounted) {

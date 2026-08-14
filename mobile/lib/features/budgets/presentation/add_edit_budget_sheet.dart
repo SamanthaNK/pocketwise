@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/providers/picker_providers.dart';
 import '../../../core/utils/error_utils.dart';
+import '../../../shared/utils/category_icons.dart';
 import '../../../shared/widgets/fold_clipper.dart';
-import '../../transactions/presentation/quick_add_sheet.dart';
 import '../models/budget_model.dart';
 import '../providers/budget_providers.dart';
 
@@ -101,7 +101,7 @@ class _AddEditBudgetSheetState extends ConsumerState<AddEditBudgetSheet> {
                 if (!_isEditing) ...[
                   Container(
                     padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(color: const Color(0xFFF3F2F0), borderRadius: BorderRadius.circular(999)),
+                    decoration: BoxDecoration(color: AppColors.chipBackground, borderRadius: BorderRadius.circular(999)),
                     child: Row(children: [
                       Expanded(child: _modeSegment('By category', 'custom')),
                       Expanded(child: _modeSegment('50/30/20 Rule', 'fifty_thirty_twenty')),
@@ -128,7 +128,7 @@ class _AddEditBudgetSheetState extends ConsumerState<AddEditBudgetSheet> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                               decoration: BoxDecoration(
-                                color: selected ? AppColors.brand.withOpacity(0.08) : const Color(0xFFF3F2F0),
+                                color: selected ? AppColors.brand.withValues(alpha: 0.08) : AppColors.chipBackground,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -173,7 +173,7 @@ class _AddEditBudgetSheetState extends ConsumerState<AddEditBudgetSheet> {
                   const SizedBox(height: 8),
                   Container(
                     padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(color: const Color(0xFFF3F2F0), borderRadius: BorderRadius.circular(999)),
+                    decoration: BoxDecoration(color: AppColors.chipBackground, borderRadius: BorderRadius.circular(999)),
                     child: Row(children: [
                       Expanded(child: _periodSegment('Weekly', 'weekly')),
                       Expanded(child: _periodSegment('Monthly', 'monthly')),
@@ -218,7 +218,7 @@ class _AddEditBudgetSheetState extends ConsumerState<AddEditBudgetSheet> {
         decoration: BoxDecoration(
           color: selected ? AppColors.surface : Colors.transparent,
           borderRadius: BorderRadius.circular(999),
-          boxShadow: selected ? [BoxShadow(color: Colors.black.withOpacity(0.09), blurRadius: 3, offset: const Offset(0, 1))] : null,
+          boxShadow: selected ? [BoxShadow(color: Colors.black.withValues(alpha: 0.09), blurRadius: 3, offset: const Offset(0, 1))] : null,
         ),
         alignment: Alignment.center,
         child: Text(label, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: selected ? AppColors.textPrimary : AppColors.textSecondary)),
@@ -235,7 +235,7 @@ class _AddEditBudgetSheetState extends ConsumerState<AddEditBudgetSheet> {
         decoration: BoxDecoration(
           color: selected ? AppColors.surface : Colors.transparent,
           borderRadius: BorderRadius.circular(999),
-          boxShadow: selected ? [BoxShadow(color: Colors.black.withOpacity(0.09), blurRadius: 3, offset: const Offset(0, 1))] : null,
+          boxShadow: selected ? [BoxShadow(color: Colors.black.withValues(alpha: 0.09), blurRadius: 3, offset: const Offset(0, 1))] : null,
         ),
         alignment: Alignment.center,
         child: Text(label, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: selected ? AppColors.textPrimary : AppColors.textSecondary)),

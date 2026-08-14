@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/utils/amount_utils.dart';
 import '../../../shared/widgets/masked_amount.dart';
@@ -52,15 +53,15 @@ class AnalyticsScreen extends ConsumerWidget {
                           Row(children: [
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(999)),
+                              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(999)),
                               child: Row(children: [
-                                Icon(isUp ? Icons.arrow_upward : Icons.arrow_downward, size: 12, color: Colors.white),
+                                Icon(isUp ? Symbols.arrow_upward_rounded : Symbols.arrow_downward_rounded, size: 12, color: Colors.white),
                                 const SizedBox(width: 4),
                                 Text('${change.abs()}%', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.white)),
                               ]),
                             ),
                             const SizedBox(width: 8),
-                            Text('vs ${formatXaf(data.previousMonthExpense)} XAF last month', style: const TextStyle(fontSize: 12, color: Colors.white70)),
+                            MaskedAmount('vs ${formatXaf(data.previousMonthExpense)} XAF last month', style: const TextStyle(fontSize: 12, color: Colors.white70)),
                           ]),
                       ],
                     ),
@@ -130,7 +131,7 @@ class AnalyticsScreen extends ConsumerWidget {
                                   child: Container(
                                     height: height < 4 ? 4 : height,
                                     decoration: BoxDecoration(
-                                      color: isCurrent ? AppColors.brand : AppColors.brand.withOpacity(0.16),
+                                      color: isCurrent ? AppColors.brand : AppColors.brand.withValues(alpha: 0.16),
                                       borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
                                     ),
                                   ),

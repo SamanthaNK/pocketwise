@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../shared/widgets/fold_clipper.dart';
 import '../models/savings_goal_model.dart';
@@ -103,12 +104,12 @@ class _AddEditGoalSheetState extends ConsumerState<AddEditGoalSheet> {
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     decoration: BoxDecoration(border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(12)),
                     child: Row(children: [
-                      const Icon(Icons.calendar_today, size: 16, color: AppColors.textSecondary),
+                      const Icon(Symbols.calendar_today_rounded, size: 16, color: AppColors.textSecondary),
                       const SizedBox(width: 10),
                       Text(_targetDate == null ? 'No target date' : DateFormat('d MMM yyyy').format(_targetDate!), style: const TextStyle(fontSize: 14)),
                       const Spacer(),
                       if (_targetDate != null)
-                        GestureDetector(onTap: () => setState(() => _targetDate = null), child: const Icon(Icons.close, size: 16, color: AppColors.textSecondary)),
+                        GestureDetector(onTap: () => setState(() => _targetDate = null), child: const Icon(Symbols.close_rounded, size: 16, color: AppColors.textSecondary)),
                     ]),
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import '../../features/budgets/presentation/budgets_screen.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/savings/presentation/savings_debts_screen.dart';
@@ -48,7 +49,7 @@ class _AppShellState extends ConsumerState<AppShell> {
       body: IndexedStack(index: _index, children: _screens),
       floatingActionButton: ClipPath(
         clipper: const FoldClipper(notchSize: 14, cornerRadius: 999),
-        child: FloatingActionButton(backgroundColor: AppColors.brand, onPressed: _openQuickAdd, child: const Icon(Icons.add, color: Colors.white)),
+        child: FloatingActionButton(backgroundColor: AppColors.brand, onPressed: _openQuickAdd, child: const Icon(Symbols.add_rounded, color: Colors.white)),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
@@ -60,11 +61,11 @@ class _AppShellState extends ConsumerState<AppShell> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _navItem(icon: Icons.home, label: 'Home', index: 0),
-              _navItem(icon: Icons.donut_small, label: 'Budgets', index: 1),
+              _navItem(icon: Symbols.home_rounded, label: 'Home', index: 0),
+              _navItem(icon: Symbols.donut_small_rounded, label: 'Budgets', index: 1),
               const SizedBox(width: 40),
-              _navItem(icon: Icons.savings, label: 'Savings', index: 2),
-              _navItem(icon: Icons.settings, label: 'Settings', index: 3),
+              _navItem(icon: Symbols.savings_rounded, label: 'Savings', index: 2),
+              _navItem(icon: Symbols.settings_rounded, label: 'Settings', index: 3),
             ],
           ),
         ),

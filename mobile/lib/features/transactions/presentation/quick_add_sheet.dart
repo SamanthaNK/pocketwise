@@ -1,9 +1,10 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/providers/picker_providers.dart';
 import '../../../core/utils/amount_utils.dart';
+import '../../../shared/utils/category_icons.dart';
 import '../../../shared/widgets/fold_clipper.dart';
 import '../../categories/models/category_model.dart';
 import '../../payment_methods/models/payment_method_model.dart';
@@ -136,13 +137,18 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                             decoration: BoxDecoration(
-                              color: selected ? AppColors.brand : const Color(0xFFF3F2F0),
+                              color: selected ? AppColors.brand : AppColors.chipBackground,
                               borderRadius: BorderRadius.circular(999),
                             ),
                             alignment: Alignment.center,
                             child: Text(
                               formatXaf(amt),
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: selected ? Colors.white : AppColors.textPrimary),
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: selected ? Colors.white : AppColors.textPrimary,
+                                fontFeatures: const [FontFeature.tabularFigures()],
+                              ),
                             ),
                           ),
                         ),
@@ -154,12 +160,12 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
                 const SizedBox(height: 20),
 
                 // Category chips
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text('CATEGORY',
-                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: AppColors.textSecondary)),
+                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: AppColors.textSecondary)),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -184,7 +190,7 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
                                 width: 68,
                                 padding: const EdgeInsets.symmetric(vertical: 8),
                                 decoration: BoxDecoration(
-                                  color: selected ? AppColors.brand.withOpacity(0.08) : const Color(0xFFF3F2F0),
+                                  color: selected ? AppColors.brand.withValues(alpha: 0.08) : AppColors.chipBackground,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Column(
@@ -228,7 +234,7 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.payments, size: 18, color: AppColors.textSecondary),
+                            const Icon(Symbols.payments_rounded, size: 18, color: AppColors.textSecondary),
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
@@ -236,7 +242,7 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
                                 style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
                               ),
                             ),
-                            const Icon(Icons.expand_more, size: 18, color: AppColors.textSecondary),
+                            const Icon(Symbols.expand_more_rounded, size: 18, color: AppColors.textSecondary),
                           ],
                         ),
                       ),
@@ -255,7 +261,7 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
                     decoration: InputDecoration(
                       hintText: 'Add a note (optional)',
                       hintStyle: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
-                      prefixIcon: const Icon(Icons.edit_note, size: 18, color: AppColors.textSecondary),
+                      prefixIcon: const Icon(Symbols.edit_note_rounded, size: 18, color: AppColors.textSecondary),
                       filled: true,
                       fillColor: AppColors.background,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.border)),
@@ -284,7 +290,12 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
                                 ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                                 : Text(
                                     _amount > 0 ? 'Add — ${formatXaf(_amount)} XAF' : 'Add',
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white,
+                                      fontFeatures: [FontFeature.tabularFigures()],
+                                    ),
                                   ),
                           ),
                         ),
@@ -304,7 +315,7 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
   Widget _segmentedToggle() {
     return Container(
       padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(color: const Color(0xFFF3F2F0), borderRadius: BorderRadius.circular(999)),
+      decoration: BoxDecoration(color: AppColors.chipBackground, borderRadius: BorderRadius.circular(999)),
       child: Row(
         children: [
           _segment('Expense', 'expense'),
@@ -327,7 +338,7 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
           decoration: BoxDecoration(
             color: selected ? AppColors.surface : Colors.transparent,
             borderRadius: BorderRadius.circular(999),
-            boxShadow: selected ? [BoxShadow(color: Colors.black.withOpacity(0.09), blurRadius: 3, offset: const Offset(0, 1))] : null,
+            boxShadow: selected ? [BoxShadow(color: Colors.black.withValues(alpha: 0.09), blurRadius: 3, offset: const Offset(0, 1))] : null,
           ),
           alignment: Alignment.center,
           child: Text(
@@ -363,7 +374,7 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
               },
             ),
             ...methods.map((m) => ListTile(
-                  leading: const Icon(Icons.payments, color: AppColors.textSecondary),
+                  leading: const Icon(Symbols.payments_rounded, color: AppColors.textSecondary),
                   title: Text(m.label),
                   onTap: () {
                     setState(() => _selectedPaymentMethod = m);
@@ -374,40 +385,5 @@ class _QuickAddSheetState extends ConsumerState<QuickAddSheet> {
         ),
       ),
     );
-  }
-}
-
-IconData iconForCategory(String? symbolName) {
-  switch (symbolName) {
-    case 'restaurant':
-      return Icons.restaurant;
-    case 'directions_bus':
-      return Icons.directions_bus;
-    case 'bolt':
-      return Icons.bolt;
-    case 'home':
-      return Icons.home;
-    case 'sim_card':
-      return Icons.sim_card;
-    case 'medical_services':
-      return Icons.medical_services;
-    case 'school':
-      return Icons.school;
-    case 'shopping_bag':
-      return Icons.shopping_bag;
-    case 'celebration':
-      return Icons.celebration;
-    case 'savings':
-      return Icons.savings;
-    case 'payments':
-      return Icons.payments;
-    case 'storefront':
-      return Icons.storefront;
-    case 'redeem':
-      return Icons.redeem;
-    case 'account_balance_wallet':
-      return Icons.account_balance_wallet;
-    default:
-      return Icons.category;
   }
 }

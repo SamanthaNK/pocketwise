@@ -68,7 +68,7 @@ class _AddContributionSheetState extends ConsumerState<AddContributionSheet> {
                 const SizedBox(height: 20),
                 Container(
                   padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(color: const Color(0xFFF3F2F0), borderRadius: BorderRadius.circular(999)),
+                  decoration: BoxDecoration(color: AppColors.chipBackground, borderRadius: BorderRadius.circular(999)),
                   child: Row(children: [
                     Expanded(child: _segment('Deposit', 'deposit')),
                     Expanded(child: _segment('Withdraw', 'withdrawal')),
@@ -126,7 +126,7 @@ class _AddContributionSheetState extends ConsumerState<AddContributionSheet> {
         decoration: BoxDecoration(
           color: selected ? AppColors.surface : Colors.transparent,
           borderRadius: BorderRadius.circular(999),
-          boxShadow: selected ? [BoxShadow(color: Colors.black.withOpacity(0.09), blurRadius: 3, offset: const Offset(0, 1))] : null,
+          boxShadow: selected ? [BoxShadow(color: Colors.black.withValues(alpha: 0.09), blurRadius: 3, offset: const Offset(0, 1))] : null,
         ),
         alignment: Alignment.center,
         child: Text(label, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: selected ? AppColors.textPrimary : AppColors.textSecondary)),

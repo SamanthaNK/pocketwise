@@ -19,11 +19,35 @@ dependencies:
   intl: ^0.19.0
   google_fonts: ^6.2.1
   uuid: ^4.6.0
+  material_symbols_icons: ^4.2785.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.3
+  flutter_native_splash: ^2.4.4
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/branding/
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/branding/icon_legacy.png"
+  adaptive_icon_background: "#F9F9F8"
+  adaptive_icon_foreground: "assets/branding/icon_adaptive_fg.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
+  background_color_ios: "#F9F9F8"
+
+flutter_native_splash:
+  color: "#F9F9F8"
+  image: assets/branding/logo_full.png
+  android: true
+  ios: false
+  web: false
+  android_gravity: center
+  fullscreen: true
